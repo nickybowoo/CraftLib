@@ -879,18 +879,19 @@ class ProtocolBuffer(@Suppress("UNUSED") @JvmField val buf: ByteBuf, @JvmField v
         }
     }
 
-    /**
-     * Reads a position long from the buffer.
-     *
-     * @author Koding
-     * @since  0.1.0-SNAPSHOT
-     */
-    fun readPosition() = readLong().let {
-        Vector3(
-            (it shr 38).toInt(),                // X: top 26 bits, already signed
-            ((it shl 26) shr 52).toInt(),       // Y: middle 12 bits, sign-extended
-            ((it shl 38) shr 38).toInt()        // Z: bottom 26 bits, sign-extended
-        )
+    fun readPosition() = readLong().let { serialized ->
+        val X_SHIFT = 38
+        val Y_SHIFT = 26
+        val Z_SHIFT = 0
+        val NUM_X_BITS = 26
+        val NUM_Y_BITS = 12
+        val NUM_Z_BITS = 26
+    
+        val i = (serialized shl (64 - X_SHIFT - NUM_X_BITS) shr (64 - NUM_X_BITS)).toInt()
+        val j = (serialized shl (64 - Y_SHIFT - NUM_Y_BITS) shr (64 - NUM_Y_BITS)).toInt()
+        val k = (serialized shl (64 - Z_SHIFT - NUM_Z_BITS) shr (64 - NUM_Z_BITS)).toInt()
+        
+        Vector3(i, j, k)
     }
 
     /**

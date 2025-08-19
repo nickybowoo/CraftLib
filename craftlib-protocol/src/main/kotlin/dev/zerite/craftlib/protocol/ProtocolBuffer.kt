@@ -887,9 +887,9 @@ class ProtocolBuffer(@Suppress("UNUSED") @JvmField val buf: ByteBuf, @JvmField v
      */
     fun readPosition() = readLong().let {
         Vector3(
-            (it shr 38).toInt(),
-            ((it shr 26) and 0xFFF).toInt(),
-            (it and 0x3FFFFFFL).toInt()
+            (it shr 38).toInt(),                // X: top 26 bits, already signed
+            ((it shl 38) shr 52).toInt(),       // Y: middle 12 bits, sign-extended
+            ((it shl 26) shr 38).toInt()        // Z: bottom 26 bits, sign-extended
         )
     }
 

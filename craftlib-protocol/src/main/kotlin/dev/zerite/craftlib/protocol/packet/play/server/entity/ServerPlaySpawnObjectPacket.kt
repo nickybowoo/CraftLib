@@ -33,7 +33,7 @@ data class ServerPlaySpawnObjectPacket(
             connection: NettyConnection
         ) = ServerPlaySpawnObjectPacket(
             buffer.readVarInt(),
-            buffer.readByte().toInt(),
+            buffer.readVarInt(),
             buffer.readFixedPoint(),
             buffer.readFixedPoint(),
             buffer.readFixedPoint(),
@@ -49,7 +49,7 @@ data class ServerPlaySpawnObjectPacket(
             connection: NettyConnection
         ) {
             buffer.writeVarInt(packet.entityId)
-            buffer.writeByte(packet.type)
+            buffer.writeVarInt(packet.type)
             buffer.writeFixedPoint(packet.x)
             buffer.writeFixedPoint(packet.y)
             buffer.writeFixedPoint(packet.z)
